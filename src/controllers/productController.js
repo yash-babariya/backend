@@ -2,11 +2,7 @@ import Product from '../models/productModel.js';
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({}).lean();
-        delete products._id
-        delete products.__v
-        delete products.createdAt
-        delete products.updatedAt
+        const products = await Product.find({}, '-_id -__v -createdAt -updatedAt');
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching products', error: error.message });
