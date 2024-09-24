@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import bcrypt from "bcrypt";
 import joi from "joi";
 
 
@@ -21,7 +22,9 @@ export const signupUser = async (req, res) => {
             return res.status(400).json({ message: error.message });
         }
 
-        const user = await User.create({ username, email, password });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({ username, email, password: hashedPassword });
+
         res.status(201).json({ message: "User created successfully", user });
 
     } catch (error) {
@@ -51,7 +54,7 @@ export const loginUser = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        const isMatch = await user.comparePassword(password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid password" });
         }
