@@ -2,14 +2,14 @@
     "version": 2,
     "builds": [
         {
-            "src": "package.json",
-            "use": "@vercel/node@canary"
+            "src": "src/server.js",
+            "use": "@vercel/node"
         }
     ],
     "routes": [
         {
-            "src": "/api/(.*)",
-            "dest": "/src/server.js"
+            "src": "/api/v1/(.*)",
+            "dest": "src/server.js"
         }
     ]
 }
