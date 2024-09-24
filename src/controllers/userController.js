@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import joi from "joi";
+import { JWT_SECRET } from "../config/db.config.js";
 
 
 // SignupController
@@ -59,12 +60,21 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid password" });
         }
 
-        res.status(200).json({ message: "Login successful" });
+        const token = generateToken(user);
+        res.status(200).json({ message: "Login successful", token });
 
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
 
-
+//generateToken
+const generateToken = (user) => {
+    const payload = {
+        id: user._id,
+        iat: Date.now(),
+    }
+    const token = jwt.sign(payload, JWT_SECRET);
+    return token;
+}
 
