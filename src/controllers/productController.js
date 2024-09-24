@@ -2,7 +2,7 @@ import Product from '../models/productModel.js';
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({});
+        const products = await Product.find({}).sort({ createdAt: -1, updatedAt: -1, __v: -1 });
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching products', error: error.message });
